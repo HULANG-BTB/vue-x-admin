@@ -3,6 +3,9 @@ import axios from 'axios'
 // xasios 实例
 const $xaxios = {}
 
+// axios 实力
+let service = null
+
 // 请求数据
 const request = options => {
   options.method = options?.type
@@ -19,7 +22,7 @@ const request = options => {
   }
 
   return new Promise((resolve, reject) => {
-    axios(options)
+    service?.(options)
       .then(res => resolve(res))
       .catch(error => reject(error))
   })
@@ -52,10 +55,12 @@ const register = options => {
 
 export default {
   install: (app, options) => {
-    const { interceptors, api } = options
+    const { interceptors, api, config } = options
+
+    service = axios.create(config)
 
     // 添加请求拦截器
-    axios.interceptors.request.use(
+    service.interceptors.request.use(
       config => {
         interceptors?.request?.(config)
         return config
@@ -67,7 +72,7 @@ export default {
     )
 
     // 添加响应拦截器
-    axios.interceptors.response.use(
+    service.interceptors.response.use(
       response => {
         interceptors?.response?.(response)
         return response
