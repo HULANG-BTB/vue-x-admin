@@ -24,5 +24,6 @@ interceptors.responseError = error => {
 
 export default {
   api: apiConfig,
-  interceptors
+  interceptors,
+  alias: '$api'
 }

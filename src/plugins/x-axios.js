@@ -3,7 +3,7 @@ import axios from 'axios'
 // xasios 实例
 const $xaxios = {}
 
-// axios 实力
+// axios 实例
 let service = null
 
 // 请求数据
@@ -55,7 +55,7 @@ const register = options => {
 
 export default {
   install: (app, options) => {
-    const { interceptors, api, config } = options
+    const { interceptors, api, config, alias } = options
 
     service = axios.create(config)
 
@@ -86,6 +86,11 @@ export default {
     // 注册接口
     api && register(api)
 
-    app.config.globalProperties.$xaxios = $xaxios
+    // 是否启用别名
+    if (alias) {
+      app.config.globalProperties[alias] = $xaxios
+    } else {
+      app.config.globalProperties.$xaxios = $xaxios
+    }
   }
 }

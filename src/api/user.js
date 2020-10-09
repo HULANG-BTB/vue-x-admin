@@ -1,5 +1,5 @@
 export const category = '业务科室管理相关接口'
-const baseUrl = '/saas/industry/basic/department'
+const baseUrl = '/dept'
 
 export default [
   {

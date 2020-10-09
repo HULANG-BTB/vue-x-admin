@@ -1,9 +1,19 @@
 import Mock from 'mockjs'
 
-// 自动引入
-const files = require.context('./modules', false, /.js$/)
-files.keys().forEach(fileName => {
-  Object.values(files(fileName).default).forEach(config => {
-    config.enable !== false && Mock.mock(config.url, config.type || 'get', config.response)
-  })
+const modulesFiles = require.context('./modules', false, /\.js$/)
+
+const mocks = modulesFiles
+  .keys()
+  .reduce((mocks, modulePath) => {
+    const value = modulesFiles(modulePath)
+    mocks.push(...value)
+    return mocks
+  }, [])
+  .filter(item => item.enable)
+
+mocks.forEach(mock => {
+  console.log(mock.url)
+  console.log(Mock.mock(mock.url, mock.type, mock.response))
 })
+
+export default mocks
